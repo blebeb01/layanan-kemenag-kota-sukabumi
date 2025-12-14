@@ -1,8 +1,8 @@
 package com.naufalm.layanankemenagkotasukabumi.ui.screens.home_screen
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -11,34 +11,44 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.naufalm.layanankemenagkotasukabumi.R
+import com.naufalm.layanankemenagkotasukabumi.components.AboutButton
 import com.naufalm.layanankemenagkotasukabumi.components.SquareButton
 import com.naufalm.layanankemenagkotasukabumi.ui.theme.jakartaSansFontFamily
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController) {
+    val profilViewModel: ProfilKemenagViewModel = viewModel()
+    val profilKemenag = profilViewModel.profilKemenagResponse
+    val isLoading = profilViewModel.isLoading
+
+    LaunchedEffect(Unit) {
+        profilViewModel.getProfilKemenag()
+    }
+
     Scaffold(
         topBar = {
             Card(
@@ -49,42 +59,36 @@ fun HomeScreen(navController: NavController) {
                 elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh)
             ) {
-                Column(
+                Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .windowInsetsPadding(WindowInsets.statusBars),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                        .windowInsetsPadding(WindowInsets.statusBars)
+                        .padding(16.dp),
                 ) {
-                    Text(
-                        modifier = Modifier,
-                        text = "Selamat Datang",
-                        fontFamily = jakartaSansFontFamily,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        textAlign = TextAlign.Center,
-                        maxLines = 1,
-                        style = MaterialTheme.typography.headlineLarge
-                    )
+                    Button(
+                        modifier = Modifier
+                            .align(Alignment.TopEnd),
+                        onClick = { navController.navigate("login_screen") }
+                    ) {
+                        Text("Login")
+                    }
+
+                    Column(
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                    ) {
+                        Text(
+                            modifier = Modifier,
+                            text = "Selamat Datang",
+                            fontFamily = jakartaSansFontFamily,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            textAlign = TextAlign.Center,
+                            maxLines = 1,
+                            style = MaterialTheme.typography.headlineLarge
+                        )
+                    }
                 }
-            }
-        },
-        floatingActionButton = {
-            Button(
-                modifier = Modifier.size(width = 150.dp, height = 60.dp),
-                onClick = { navController.navigate("profil_kemenag_screen") },
-                shape = RoundedCornerShape(50),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                contentPadding = PaddingValues(3.dp)
-            ) {
-                Text(
-                    text = "Profil Kemenag Kota Sukabumi",
-                    fontFamily = jakartaSansFontFamily,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 10.sp,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    textAlign = TextAlign.Center
-                )
             }
         }
     ) {
@@ -92,7 +96,8 @@ fun HomeScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
-                .padding(top = 55.dp),
+                .padding(top = 55.dp)
+                .verticalScroll(rememberScrollState()),
         ) {
             Row(
                 modifier = Modifier
@@ -135,14 +140,12 @@ fun HomeScreen(navController: NavController) {
                 SquareButton(
                     image = painterResource(R.drawable.kaaba_icon),
                     title = "Pendidikan Agama Islam"
-                ) { navController.navigate("haji_screen") }
+                ) { navController.navigate("pai_screen") }
             }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            AboutButton(profilKemenag = profilKemenag, isLoading = isLoading)
         }
     }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun HomeScreenPreview() {
-    HomeScreen(navController = rememberNavController())
 }

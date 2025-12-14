@@ -1,38 +1,52 @@
 package com.naufalm.layanankemenagkotasukabumi.ui.screens
 
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.naufalm.layanankemenagkotasukabumi.ui.screens.bimas_screen.BimasScreen
-import com.naufalm.layanankemenagkotasukabumi.ui.screens.bimas_screen.BimasViewModel
 import com.naufalm.layanankemenagkotasukabumi.ui.screens.haji_screen.HajiScreen
-import com.naufalm.layanankemenagkotasukabumi.ui.screens.haji_screen.HajiViewModel
 import com.naufalm.layanankemenagkotasukabumi.ui.screens.home_screen.HomeScreen
+import com.naufalm.layanankemenagkotasukabumi.ui.screens.login_screen.LoginScreen
 import com.naufalm.layanankemenagkotasukabumi.ui.screens.pai_screen.PaiScreen
-import com.naufalm.layanankemenagkotasukabumi.ui.screens.pai_screen.PaiViewModel
-import com.naufalm.layanankemenagkotasukabumi.ui.screens.profil_kemenag_screen.ProfilKemenagScreen
-import com.naufalm.layanankemenagkotasukabumi.ui.screens.profil_kemenag_screen.ProfilKemenagViewModel
+import com.naufalm.layanankemenagkotasukabumi.ui.screens.register_screen.RegisterScreen
 import com.naufalm.layanankemenagkotasukabumi.ui.screens.subbag_tu_screen.SubbagTuScreen
-import com.naufalm.layanankemenagkotasukabumi.ui.screens.subbag_tu_screen.SubbagTuViewModel
+
+const val SCREEN_TRANSITION_MILLIS = 500
 
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
-    val profilKemenagViewModel = ProfilKemenagViewModel()
-    val infoSubbagTuViewModel = SubbagTuViewModel()
-    val infoHajiViewModel = HajiViewModel()
-    val infoBimasViewModel = BimasViewModel()
 
-
-
-
-    val infoPaiViewModel = PaiViewModel()
-
-    NavHost(navController = navController,
+    NavHost(
+        navController = navController,
         startDestination = "home_screen",
-        enterTransition = { slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Up) }
+        enterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Start,
+                animationSpec = tween(SCREEN_TRANSITION_MILLIS)
+            )
+        },
+        exitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Start,
+                animationSpec = tween(SCREEN_TRANSITION_MILLIS)
+            )
+        },
+        popEnterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.End,
+                animationSpec = tween(SCREEN_TRANSITION_MILLIS)
+            )
+        },
+        popExitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.End,
+                animationSpec = tween(SCREEN_TRANSITION_MILLIS)
+            )
+        }
     ) {
         composable(
             "home_screen"
@@ -41,70 +55,59 @@ fun Navigation() {
         }
 
         composable(
-            "profil_kemenag_screen"
+            "subbag_tu_screen",
         ) {
-            ProfilKemenagScreen(
-                navController = navController,
-                profilKemenag = profilKemenagViewModel.profilKemenagResponse
-            )
-            profilKemenagViewModel.getProfilKemenag()
-        }
-
-        composable("subbag_tu_screen") {
             SubbagTuScreen(
-                navController = navController,
-                infoSubbagTu = infoSubbagTuViewModel.infoSubbagTuResponse
+                navController = navController
             )
-            infoSubbagTuViewModel.getInfoSubbagTu()
         }
 
         composable("haji_screen") {
             HajiScreen(
-                navController = navController,
-                infoHaji = infoHajiViewModel.infoHajiResponse
+                navController = navController
             )
-            infoHajiViewModel.getInfoHaji()
         }
 
         composable("bimas_screen") {
             BimasScreen(
-                navController = navController,
-                infoBimas = infoBimasViewModel.infoBimasResponse
+                navController = navController
             )
-            infoBimasViewModel.getInfoBimas()
         }
 
         composable("pontren_screen") {
             BimasScreen(
-                navController = navController,
-                infoBimas = infoBimasViewModel.infoBimasResponse
+                navController = navController
             )
-            infoBimasViewModel.getInfoBimas()
         }
 
         composable("penmad_screen") {
             BimasScreen(
-                navController = navController,
-                infoBimas = infoBimasViewModel.infoBimasResponse
+                navController = navController
             )
-            infoBimasViewModel.getInfoBimas()
         }
 
         composable("zakat_screen") {
             BimasScreen(
-                navController = navController,
-                infoBimas = infoBimasViewModel.infoBimasResponse
+                navController = navController
             )
-            infoBimasViewModel.getInfoBimas()
         }
 
         composable("pai_screen") {
             PaiScreen(
-                navController = navController,
-                infoPai = infoPaiViewModel.infoPaiResponse
-
+                navController = navController
             )
-            infoPaiViewModel.getInfoPai()
+        }
+
+        composable("login_screen") {
+            LoginScreen(
+                navController = navController
+            )
+        }
+
+        composable("register_screen") {
+            RegisterScreen(
+                navController = navController
+            )
         }
     }
 }

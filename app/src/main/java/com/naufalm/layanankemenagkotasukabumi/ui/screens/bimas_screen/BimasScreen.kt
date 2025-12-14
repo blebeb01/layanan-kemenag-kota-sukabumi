@@ -13,19 +13,28 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.naufalm.layanankemenagkotasukabumi.components.MyLargeTopAppBar
 import com.naufalm.layanankemenagkotasukabumi.ui.theme.jakartaSansFontFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BimasScreen(navController: NavController, infoBimas: String) {
+fun BimasScreen(navController: NavController) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+
+    val viewModel: BimasViewModel = viewModel()
+    val infoBimas = viewModel.infoBimasResponse
+
+    LaunchedEffect(Unit) {
+        viewModel.getInfoBimas()
+    }
 
     Scaffold(
         modifier = Modifier

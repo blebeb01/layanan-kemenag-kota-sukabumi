@@ -1,4 +1,4 @@
-package com.naufalm.layanankemenagkotasukabumi.ui.screens.profil_kemenag_screen
+package com.naufalm.layanankemenagkotasukabumi.ui.screens.home_screen
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -15,7 +15,7 @@ class ProfilKemenagViewModel : ViewModel() {
 
     fun getProfilKemenag() {
         viewModelScope.launch {
-            val apiService = ApiService.getInstance()
+            val apiService = ApiService.Companion.getInstance()
 
             try {
                 val profilKemenag = apiService.getPosts()
